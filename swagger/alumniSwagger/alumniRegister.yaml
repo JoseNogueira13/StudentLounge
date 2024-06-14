@@ -1,0 +1,95 @@
+openapi: 3.0.0
+info:
+  title: StudentLounge
+  version: 1.0.0
+  description: documentation for alumni registration
+paths:
+  /alumni/register:
+    post:
+      tags:
+        - alumni
+      summary: Register a new alumni
+      description: Register a new alumni
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: testUser
+                password:
+                  type: string
+                  example: testPassword
+                email:
+                  type: string
+                  example: testEmail@email.email
+                studentNumber:
+                  type: string
+                  example: 24              
+                name:
+                  type: string
+                  example: testName
+                experiencePoints:
+                  type: integer
+                  example: 0
+                level:
+                  type: string
+                  example: 1
+                currentProfession:
+                  type: string
+                  example: designer
+                skills:
+                  type: string
+                  example: python, blender, javascript
+                isAdmin:
+                  type: boolean
+                  example: false
+      responses:
+        201:
+          description: Alumni registered successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Account registered successfully
+        400:
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        msg:
+                          type: string
+                          example: Please provide all the fields
+        409:
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: An account with those credentials already exist. You should use a different username, email or student number
+        500:
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal server error

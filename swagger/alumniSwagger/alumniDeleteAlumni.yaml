@@ -1,0 +1,80 @@
+openapi: 3.0.0
+info:
+  title: StudentLounge
+  version: 1.0.0
+  description: documentation for alumni account deletion
+paths:
+  /alumni/{alumniId}:
+    delete:
+      tags:
+        - alumni
+      summary: Delete an alumni by ID
+      description: Delete an alumni account by its ID
+      parameters:
+        - in: path
+          name: alumniId
+          required: true
+          description: The ID of the alumni to delete
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Account deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Alumni deleted successfully
+        400:
+          description: Invalid alumni ID
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Invalid alumni ID
+        401:
+          description: Unauthorized access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: You need to be authenticated to delete an account
+        403:
+          description: Forbidden access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Your account lacks the necessary permissions for this action
+        404:
+          description: Alumni not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: The account you are trying to delete does not exist
+        500:
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
