@@ -29,20 +29,37 @@ router.post('/login', loginAlumniValidator, async(req, res, next) => {
     };
 });
 
-router.delete('/deleteAccount', verifyToken, async(req, res, next) => {
+router.patch('/', verifyToken, async (req, res, next) => {
     try {
-        await alumniController.deleteAccount(req, res);
+        await alumniController.updateAlumni(req, res);
     } catch (error) {
         next(error);
-    };
+    }
 });
 
-router.delete('/:alumniId', verifyToken, checkAdmin, async(req, res, next) => {
+router.delete('/:alumniId', verifyToken, async (req, res, next) => {
     try {
         await alumniController.deleteAlumni(req, res);
     } catch (error) {
         next(error);
-    };
+    }
 });
+
+router.get('/:alumniId', verifyToken, async (req, res, next) => {
+    try {
+        await alumniController.getAlumni(req, res);
+    } catch (error) {
+        next(error);
+    }
+});
+
+router.get('/', verifyToken, async (req, res, next) => {
+    try {
+        await alumniController.getAllAlumni(req, res);
+    } catch (error) {
+        next(error);
+    }
+});
+
 
 module.exports = router;

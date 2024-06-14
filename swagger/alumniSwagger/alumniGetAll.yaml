@@ -1,0 +1,154 @@
+openapi: 3.0.0
+info:
+  title: StudentLounge
+  version: 1.0.0
+  description: documentation for alumni account information retrieval
+paths:
+  /alumni:
+    get:
+      tags:
+        - alumni
+      summary: Get all alumni with filters
+      description: Get all alumni and allow filters
+      parameters:
+        - in: query
+          name: name
+          schema:
+            type: string
+          description: Filter by alumni name
+        - in: query
+          name: profession
+          schema:
+            type: string
+          description: Filter by alumni profession
+        - in: query
+          name: skill
+          schema:
+            type: string
+          description: Filter by alumni skill
+        - in: query
+          name: companies
+          schema:
+            type: string
+          description: Filter by alumni companies
+        - in: query
+          name: page
+          schema:
+            type: integer
+          description: Page number for pagination
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: Number of results per page
+        - in: header
+          name: token
+          required: true
+          schema:
+            type: string
+          description: JWT token
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  pagination:
+                    type: object
+                    properties:
+                      total:
+                        type: integer
+                        example: 100
+                      pages:
+                        type: integer
+                        example: 10
+                      current:
+                        type: integer
+                        example: 1
+                      limit:
+                        type: integer
+                        example: 10
+                  alumni:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        alumniId:
+                          type: string
+                          example: 123456
+                        name:
+                          type: string
+                          example: John Doe
+                        profession:
+                          type: string
+                          example: Software Engineer
+                        skills:
+                          type: array
+                          items:
+                            type: string
+                          example: ["JavaScript", "React"]
+                        companies:
+                          type: array
+                          items:
+                            type: string
+                          example: ["Company A", "Company B"]
+                        links:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              rel:
+                                type: string
+                                example: self
+                              href:
+                                type: string
+                                example: /alumni/123456
+                              method:
+                                type: string
+                                example: GET
+                  links:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        rel:
+                          type: string
+                          example: prev-page
+                        href:
+                          type: string
+                          example: /alumni?page=0&limit=10
+                        method:
+                          type: string
+                          example: GET
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: You need to be logged in to get information about an alumni
+        404:
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: The alumni does not exist
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Something went wrong. Please try again later

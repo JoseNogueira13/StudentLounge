@@ -8,15 +8,16 @@ paths:
     delete:
       tags:
         - alumni
-      summary: Delete an alumni by ID
-      description: Delete an alumni account by its ID
+      summary: Delete an alumni account
+      description: Delete the authenticated user's own alumni account with `/me` or any alumni account by specifying the alumni ID (admin only).
       parameters:
         - in: path
           name: alumniId
           required: true
-          description: The ID of the alumni to delete
+          description: The ID of the alumni to delete or 'me' to delete own account
           schema:
-            type: integer
+            type: string
+            example: '5'
       responses:
         200:
           description: Account deleted successfully
@@ -27,17 +28,7 @@ paths:
                 properties:
                   message:
                     type: string
-                    example: Alumni deleted successfully
-        400:
-          description: Invalid alumni ID
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                    example: Invalid alumni ID
+                    example: Account deleted successfully
         401:
           description: Unauthorized access
           content:
@@ -47,7 +38,7 @@ paths:
                 properties:
                   error:
                     type: string
-                    example: You need to be authenticated to delete an account
+                    example: Unauthorized access
         403:
           description: Forbidden access
           content:
@@ -57,9 +48,9 @@ paths:
                 properties:
                   error:
                     type: string
-                    example: Your account lacks the necessary permissions for this action
+                    example: Forbidden: You do not have permission to delete this account
         404:
-          description: Alumni not found
+          description: Alumni account not found
           content:
             application/json:
               schema:
@@ -67,7 +58,7 @@ paths:
                 properties:
                   error:
                     type: string
-                    example: The account you are trying to delete does not exist
+                    example: Alumni account not found
         500:
           description: Server error
           content:

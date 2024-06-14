@@ -1,0 +1,88 @@
+openapi: 3.0.0
+info:
+  title: StudentLounge
+  version: 1.0.0
+  description: documentation for alumni account editing
+paths:
+  /alumni:
+    patch:
+      tags:
+        - alumni
+      summary: Change information about an alumni
+      description: Change information about an alumni
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: newUsername
+                password:
+                  type: string
+                  example: newPassword
+                email:
+                  type: string
+                  example: newEmail@example.com
+                name:
+                  type: string
+                  example: New Name
+                currentCompany:
+                  type: string
+                  example: New Company
+                skills:
+                  type: string
+                  example: JavaScript, Python
+      responses:
+        200:
+          description: Account altered successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Account altered successfully
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Some of the fields you altered seem to be incorrect. Make sure the email has a correct format
+        404:
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: The account you are trying to alter does not exist
+        409:
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Those credentials already exist. You should use a different email
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Something went wrong. Please try again later

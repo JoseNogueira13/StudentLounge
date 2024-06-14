@@ -85,49 +85,154 @@ async function login(req, res) {
     }
 }
 
-async function deleteAccount(req, res) {
+async function updateAlumni(req, res) {
+    const { username, password, email, name, currentCompany, skills } = req.body;
     const { alumniId } = req.user;
 
     try {
         const alumni = await Alumni.findByPk(alumniId);
         if (!alumni) {
-            return res.status(404).json({ error: 'Alumni account not found' });
+            return res.status(404).json({ message: 'The account you are trying to alter does not exist' });
         }
 
-        await Alumni.destroy({
-            where: {
-                alumniId
+        if (username) {
+            const existingUsername = await Alumni.findOne({ where: { username } });
+            if (existingUsername) {
+                return res.status(409).json({ message: 'Those credentials already exist. You should use a different username' });
             }
-        });
+            alumni.username = username;
+        }
 
-        res.status(200).json({ message: 'Account deleted successfully' });
+        if (password) {
+            const hashedPassword = await bcrypt.hash(password, 10);
+            alumni.password = hashedPassword;
+        }
 
+        if (email) {
+            const existingEmail = await Alumni.findOne({ where: { email } });
+            if (existingEmail) {
+                return res.status(409).json({ message: 'Those credentials already exist. You should use a different email' });
+            }
+            alumni.email = email;
+        }
+
+        if (name) alumni.name = name;
+        if (currentCompany) alumni.currentCompany = currentCompany;
+        if (skills) alumni.skills = skills;
+
+        await alumni.save();
+
+        res.status(200).json({ message: 'Account altered successfully' });
     } catch (error) {
-        res.status(500).json({ error: 'Something went wrong. Please try again later' });
+        console.error('Error updating alumni account:', error);
+        res.status(500).json({ message: 'Something went wrong. Please try again later' });
     }
 }
 
+
 async function deleteAlumni(req, res) {
     const { alumniId } = req.params;
-    console.log(alumniId);
+    const { alumniId: userId, isAdmin } = req.user;
 
     try {
-        const alumni = await Alumni.findByPk(alumniId);
+        let idToDelete;
+        if (alumniId === 'me') {
+            idToDelete = userId;
+        } else {
+            if (!isAdmin) {
+                return res.status(403).json({ error: 'Forbidden: You do not have permission to delete this account' });
+            }
+            idToDelete = alumniId;
+        }
+
+        const alumni = await Alumni.findByPk(idToDelete);
         if (!alumni) {
             return res.status(404).json({ error: 'Alumni account not found' });
         }
 
         await Alumni.destroy({
             where: {
-                alumniId
+                alumniId: idToDelete
             }
         });
 
         res.status(200).json({ message: 'Account deleted successfully' });
 
     } catch (error) {
-        res.status(500).json({ error: 'Something went wrong. Please try again later', error });
+        console.error('Error deleting alumni account:', error);
+        res.status(500).json({ error: 'Something went wrong. Please try again later' });
     }
 }
 
-module.exports = { registerAlumni, login, deleteAccount, deleteAlumni};
+async function getAlumni(req, res) {
+    const { alumniId } = req.params;
+
+    try {
+        const alumni = await Alumni.findByPk(alumniId);
+        if (!alumni) {
+            return res.status(404).json({ message: 'The alumni does not exist' });
+        }
+
+        res.status(200).json({
+            email: alumni.email,
+            name: alumni.name,
+            currentCompany: alumni.currentProfession,
+            skills: alumni.skills.split(',').map(skill => skill.trim())
+        });
+
+    } catch (error) {
+        res.status(500).json({ message: 'Something went wrong. Please try again later' });
+    }
+}
+
+async function getAllAlumni(req, res) {
+    const { name, profession, skill, companies, page = 1, limit = 10 } = req.query;
+    const offset = (page - 1) * limit;
+
+    const where = {};
+    if (name) where.name = { [Op.like]: `%${name}%` };
+    if (profession) where.currentProfession = { [Op.like]: `%${profession}%` };
+    if (skill) where.skills = { [Op.like]: `%${skill}%` };
+    if (companies) where.currentProfession = { [Op.like]: `%${companies}%` };
+
+    try {
+        const { count, rows } = await Alumni.findAndCountAll({
+            where,
+            limit: parseInt(limit, 10),
+            offset,
+        });
+
+        const alumni = rows.map(alumnus => ({
+            alumniId: alumnus.alumniId,
+            name: alumnus.name,
+            profession: alumnus.currentProfession,
+            skills: alumnus.skills.split(',').map(skill => skill.trim()),
+            companies: alumnus.currentProfession.split(',').map(company => company.trim()),
+            links: [
+                { rel: 'self', href: `/alumni/${alumnus.alumniId}`, method: 'GET' }
+            ]
+        }));
+
+        const totalPages = Math.ceil(count / limit);
+
+        res.status(200).json({
+            pagination: {
+                total: count,
+                pages: totalPages,
+                current: parseInt(page, 10),
+                limit: parseInt(limit, 10),
+            },
+            alumni,
+            links: [
+                { rel: 'prev-page', href: `/alumni?page=${page > 1 ? page - 1 : 1}&limit=${limit}`, method: 'GET' },
+                { rel: 'next-page', href: `/alumni?page=${parseInt(page, 10) + 1}&limit=${limit}`, method: 'GET' }
+            ]
+        });
+
+    } catch (error) {
+        res.status(500).json({ message: 'Something went wrong. Please try again later' });
+    }
+}
+
+
+module.exports = { registerAlumni, login, updateAlumni, deleteAlumni, getAlumni, getAllAlumni};

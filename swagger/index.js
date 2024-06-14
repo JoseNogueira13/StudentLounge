@@ -1,7 +1,34 @@
-const { alumniRegister } = require('./alumniSwagger');
-const { alumniLogin } = require('./alumniSwagger');
-const { alumniDeleteAccount } = require('./alumniSwagger');
-const { alumniDeleteAlumni } = require('./alumniSwagger');
+const YAML = require('yamljs');
+const path = require('path');
+const fs = require('fs');
+
+// Function to recursively load all YAML files from a given directory
+const loadYAMLFiles = (dirPath) => {
+  let paths = {};
+  const files = fs.readdirSync(dirPath);
+
+  files.forEach(file => {
+    const filePath = path.join(dirPath, file);
+    if (fs.lstatSync(filePath).isDirectory()) {
+      // Recursively load YAML files from subdirectories
+      paths = { ...paths, ...loadYAMLFiles(filePath) };
+    } else if (file.endsWith('.yaml') || file.endsWith('.yml')) {
+      const yamlContent = YAML.load(filePath);
+      // Merge paths without overwriting existing ones
+      for (const [pathKey, methods] of Object.entries(yamlContent.paths)) {
+        if (!paths[pathKey]) {
+          paths[pathKey] = {};
+        }
+        Object.assign(paths[pathKey], methods);
+      }
+    }
+  });
+
+  return paths;
+};
+
+// Load all YAML files from the 'swagger' directory
+const alumniPaths = loadYAMLFiles(path.resolve(__dirname, './alumniSwagger'));
 
 const swaggerDocument = {
   openapi: '3.0.0',
@@ -11,10 +38,7 @@ const swaggerDocument = {
     description: 'API documentation for all routes',
   },
   paths: {
-    ...alumniRegister.paths,
-    ...alumniLogin.paths,
-    ...alumniDeleteAccount.paths,
-    ...alumniDeleteAlumni.paths,
+    ...alumniPaths,
   },
   tags: [
     {
