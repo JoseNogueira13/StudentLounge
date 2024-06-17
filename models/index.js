@@ -34,6 +34,12 @@ Projects.belongsTo(Alumni, { foreignKey: 'alumniId' });
 Chat.hasMany(Message, { foreignKey: 'chatId' });
 Message.belongsTo(Chat, { foreignKey: 'chatId' });
 
+//companies and AlumniCompany
+Company.hasMany(AlumniCompany, { foreignKey: 'companyId' });
+AlumniCompany.belongsTo(Company, { foreignKey: 'companyId' });
+
+
+
 // Export models
 module.exports = {
   Alumni,

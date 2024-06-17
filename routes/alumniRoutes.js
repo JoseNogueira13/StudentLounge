@@ -61,5 +61,13 @@ router.get('/', verifyToken, async (req, res, next) => {
     }
 });
 
+router.get('/:alumniId/companies', verifyToken, async (req, res, next) => {
+    try {
+        await alumniController.getAlumniCompanies(req, res);
+    } catch (error) {
+        next(error);
+    }
+});
+
 
 module.exports = router;

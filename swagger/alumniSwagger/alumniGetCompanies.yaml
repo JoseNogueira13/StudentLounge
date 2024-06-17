@@ -1,0 +1,97 @@
+openapi: 3.0.0
+info:
+  title: StudentLounge
+  version: 1.0.0
+  description: documentation for alumni company information retrieval
+paths:
+  /alumni/{alumniId}/companies:
+    get:
+      tags:
+        - alumni
+      summary: Get all companies of a specific alumni
+      description: Retrieve information about all companies where the alumni has worked
+      parameters:
+        - in: path
+          name: alumniId
+          required: true
+          schema:
+            type: integer
+          description: ID of the alumni whose companies information is requested
+        - in: header
+          name: token
+          required: true
+          schema:
+            type: string
+          description: Authentication token for accessing the API
+      responses:
+        '200':
+          description: Successful response with alumni and companies information
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  alumni:
+                    type: string
+                    example: "John Doe"
+                    description: Name of the alumni
+                  companies:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        companyName:
+                          type: string
+                          example: "Company A"
+                          description: Name of the company
+                        type:
+                          type: string
+                          example: "frontEnd"
+                          description: Type of work (e.g., frontEnd, backEnd)
+                        location:
+                          type: string
+                          example: "Porto"
+                          description: Location of the company
+                        startDate:
+                          type: string
+                          format: date
+                          example: "2018-01-01"
+                          description: Start date of employment
+                        endDate:
+                          type: string
+                          format: date
+                          example: "2020-12-31"
+                          description: End date of employment (null if currently employed)
+        '401':
+          description: Unauthorized access error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "You need to be logged in to get information about an alumni"
+                    description: Error message indicating unauthorized access
+        '404':
+          description: Alumni not found error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "The alumni does not exist"
+                    description: Error message indicating alumni not found
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Something went wrong. Please try again later"
+                    description: Error message indicating a server error occurred

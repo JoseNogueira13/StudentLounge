@@ -1,0 +1,73 @@
+openapi: 3.0.0
+info:
+  title: StudentLounge
+  version: 1.0.0
+  description: documentation for company creation
+paths:
+  /companies:
+    post:
+      tags:
+        - companies
+      summary: Create a new company
+      description: Create a new company
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: "TechCorp"
+                type:
+                  type: string
+                  example: "Robotics"
+                location:
+                  type: string
+                  example: "Porto"
+              required:
+                - name
+                - type
+                - location
+      responses:
+        '201':
+          description: Company successfully added
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Company successfully added
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Some of the fields are missing
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: A company with that name already exists
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Something went wrong. Please try again later

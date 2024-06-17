@@ -1,4 +1,5 @@
-const { Alumni } = require('../models');
+const { Alumni, AlumniCompany, Company} = require('../models');
+const { formatDate } = require('../utils/date.js');
 const bcrypt = require('bcrypt');
 const { Op } = require('sequelize');
 const jwt = require('jsonwebtoken');
@@ -234,5 +235,41 @@ async function getAllAlumni(req, res) {
     }
 }
 
+async function getAlumniCompanies(req, res) {
+    const { alumniId } = req.params;
 
-module.exports = { registerAlumni, login, updateAlumni, deleteAlumni, getAlumni, getAllAlumni};
+    try {
+        const alumni = await Alumni.findByPk(alumniId);
+        if (!alumni) {
+            return res.status(404).json({ message: 'The alumni does not exist' });
+        }
+
+        const alumniCompanies = await AlumniCompany.findAll({
+            where: {
+                alumniId
+            },
+            include: Company
+        });
+
+        const companies = alumniCompanies.map(alumniCompany => ({
+            companyName: alumniCompany.Company.name,
+            type: alumniCompany.Company.type,
+            location: alumniCompany.Company.location,
+            startDate: formatDate(alumniCompany.startDate),
+            endDate: formatDate(alumniCompany.endDate)
+        }));
+
+        res.status(200).json({
+            alumni: alumni.name,
+            companies: companies
+        });
+
+    } catch (error) {
+        console.error('Error getting alumni companies:', error);
+        res.status(500).json({ message: 'Something went wrong. Please try again later' });
+    }
+}
+
+
+
+module.exports = { registerAlumni, login, updateAlumni, deleteAlumni, getAlumni, getAllAlumni, getAlumniCompanies};

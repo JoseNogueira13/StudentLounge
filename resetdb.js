@@ -21,13 +21,14 @@ async function resetDatabase() {
     await models.Alumni.bulkCreate(hashedAlumniData);
 
         await models.Company.bulkCreate([
-        {name: 'Company 1', type: 'front-end' ,location: 'Lisbon', startingDate: new Date(), finishingDate: new Date()},
-        {name: 'Company 2', type: 'back-end' ,location: 'Porto', startingDate: new Date(), finishingDate: new Date()},
-        {name: 'Company 3', type: 'design' ,location: 'Aveiro', startingDate: new Date()},
+        {name: 'company1', type: 'front-end' ,location: 'Lisbon', startingDate: new Date(), finishingDate: new Date()},
+        {name: 'company2', type: 'back-end' ,location: 'Porto', startingDate: new Date(), finishingDate: new Date()},
+        {name: 'company3', type: 'design' ,location: 'Aveiro', startingDate: new Date()},
     ]);
         await models.AlumniCompany.bulkCreate([
         {alumniId: 1, companyId: 3, startDate: new Date(), endDate: new Date()},
         {alumniId: 2, companyId: 2, startDate: new Date(), endDate: new Date()},
+        {alumniId: 1, companyId: 1, startDate: new Date(), endDate: new Date()},
     ]);
         await models.Events.bulkCreate([
         {title: 'Workshop',date: new Date(), location: 'b108'},
