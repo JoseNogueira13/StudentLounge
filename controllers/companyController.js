@@ -24,7 +24,6 @@ async function createCompany(req, res) {
 
         res.status(200).json({ message: 'Company created successfully' });
     } catch (error) {
-        console.log(error);
         res.status(500).json({ error: 'Something went wrong. Please try again later' });
     }
 }

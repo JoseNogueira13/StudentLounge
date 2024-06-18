@@ -38,6 +38,13 @@ Message.belongsTo(Chat, { foreignKey: 'chatId' });
 Company.hasMany(AlumniCompany, { foreignKey: 'companyId' });
 AlumniCompany.belongsTo(Company, { foreignKey: 'companyId' });
 
+//posts and FavoritePosts
+Posts.hasMany(FavoritePosts, { foreignKey: 'postId' });
+FavoritePosts.belongsTo(Posts, { foreignKey: 'postId' });
+
+//events and AlumniEvents
+Events.hasMany(AlumniEvents, { foreignKey: 'eventId' });
+AlumniEvents.belongsTo(Events, { foreignKey: 'eventId' });
 
 
 // Export models

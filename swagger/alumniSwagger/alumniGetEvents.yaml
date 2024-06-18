@@ -1,0 +1,90 @@
+openapi: 3.0.0
+info:
+  title: StudentLounge
+  version: 1.0.0
+  description: Documentation to get events an alumni is participating in
+paths:
+  /alumni/{alumniId}/events:
+    get:
+      tags:
+        - alumni
+      summary: Get all the events a specific alumni is participating in
+      parameters:
+        - in: path
+          name: alumniId
+          required: true
+          schema:
+            type: integer
+          description: ID of the alumni
+        - in: header
+          name: token
+          required: true
+          schema:
+            type: string
+          description: Authentication token
+      responses:
+        '200':
+          description: A list of events the alumni is participating in
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  alumni:
+                    type: string
+                    example: "John Doe"
+                  events:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        title:
+                          type: string
+                          example: "Tech Conference 2024"
+                        date:
+                          type: string
+                          format: date
+                          example: "2024-07-15"
+                        location:
+                          type: string
+                          example: "b204"
+                        title:
+                          type: string
+                          example: "PlugIn"
+                        date:
+                          type: string
+                          format: date
+                          example: "2024-08-20"
+                        location:
+                          type: string
+                          example: "Auditório"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "You need to be logged in to get information about an alumni"
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "The alumni does not exist"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Something went wrong. Please try again later"

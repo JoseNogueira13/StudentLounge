@@ -38,7 +38,7 @@ const Alumni = sequelize.define('Alumni', {
     allowNull: true
   },
   level: {
-    type: DataTypes.STRING,
+    type: DataTypes.INTEGER,
     allowNull: true
   },
   currentProfession: {

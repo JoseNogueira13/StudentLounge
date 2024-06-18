@@ -1,4 +1,4 @@
-const { Alumni, AlumniCompany, Company} = require('../models');
+const { Alumni, AlumniCompany, Company, Posts, FavoritePosts, AlumniEvents, Events} = require('../models');
 const { formatDate } = require('../utils/date.js');
 const bcrypt = require('bcrypt');
 const { Op } = require('sequelize');
@@ -270,6 +270,118 @@ async function getAlumniCompanies(req, res) {
     }
 }
 
+async function addAlumniToCompany(req, res) {
+    const { alumniId } = req.params;
+    const { companyId, startDate, endDate } = req.body;
+
+    try {
+        const alumni = await Alumni.findByPk(alumniId);
+        if (!alumni) {
+            return res.status(404).json({ message: 'The alumni does not exist' });
+        }
+
+        const company = await Company.findByPk(companyId);
+        if (!company) {
+            return res.status(404).json({ message: 'The company does not exist' });
+        }
+
+        if (!startDate || !endDate) {
+            return res.status(400).json({ message: 'The data you provIded is incorrect or missing' });            
+        }
+
+        const existingAlumniCompany = await AlumniCompany.findOne({
+            where: {
+                alumniId,
+                companyId
+            }
+        });
+
+        if (existingAlumniCompany) {
+            return res.status(409).json({ message: 'The alumni is already associated with the company' });
+        }
+
+        await AlumniCompany.create({
+            alumniId,
+            companyId,
+            startDate: formatDate(startDate),
+            endDate: formatDate(endDate)
+        });
+
+        // Update experience points and level
+        alumni.experiencePoints += 200;
+        if (alumni.experiencePoints >= 500) {
+            alumni.experiencePoints = 0;
+            alumni.level += 1;
+        }
+        await alumni.save();
+
+        res.status(200).json({ message: 'Alumni added to the company successfully' });
+    } catch (error) {
+        console.error('Error adding alumni to company:', error);
+        res.status(500).json({ message: 'Something went wrong. Please try again later' });
+    }
+}
+
+async function getFavoritePosts(req, res) {
+    const { alumniId } = req.params;
+
+    try {
+        const alumni = await Alumni.findByPk(alumniId);
+        if (!alumni) {
+            return res.status(404).json({ message: 'The alumni does not exist' });
+        }
+
+        const favoritePosts = await FavoritePosts.findAll({
+            where: {
+                alumniId
+            },
+            include: {
+                model: Posts,
+                attributes: ['postId', 'title', 'image', 'postBody']
+            }
+        });
+
+        const posts = favoritePosts.map(favorite => favorite.Post);
+
+        res.status(200).json({ posts });
+    } catch (error) {
+        console.error('Error getting alumni favorites:', error);
+        res.status(500).json({ message: 'Something went wrong. Please try again later' });
+    }
+}
 
 
-module.exports = { registerAlumni, login, updateAlumni, deleteAlumni, getAlumni, getAllAlumni, getAlumniCompanies};
+async function getAlumniEvents(req, res) {
+    const { alumniId } = req.params;
+
+    try {
+        const alumni = await Alumni.findByPk(alumniId);
+        if (!alumni) {
+            return res.status(404).json({ message: 'The alumni does not exist' });
+        }
+
+        const alumniEvents = await AlumniEvents.findAll({
+            where: { alumniId },
+            include: [{
+                model: Events,
+                attributes: ['title', 'date', 'location']
+            }]
+        });
+
+        const events = alumniEvents.map(alumniEvent => {
+            const { title, date, location } = alumniEvent.Event;
+            return { title, date, location };
+        });
+
+        res.status(200).json({
+            alumni: alumni.name,
+            events
+        });
+    } catch (error) {
+        console.error('Error getting alumni events:', error);
+        res.status(500).json({ message: 'Something went wrong. Please try again later' });
+    }
+}
+
+
+module.exports = { registerAlumni, login, updateAlumni, deleteAlumni, getAlumni, getAllAlumni, getAlumniCompanies,  addAlumniToCompany, getFavoritePosts, getAlumniEvents};

@@ -69,5 +69,29 @@ router.get('/:alumniId/companies', verifyToken, async (req, res, next) => {
     }
 });
 
+router.post('/:alumniId/companies', verifyToken, async (req, res, next) => {
+    try {
+        await alumniController.addAlumniToCompany(req, res);
+    } catch (error) {
+        next(error);
+    }
+});
+
+router.get('/:alumniId/favorites', verifyToken, async (req, res, next) => {
+    try {
+        await alumniController.getFavoritePosts(req, res);
+    } catch (error) {
+        next(error);
+    }
+});
+
+router.get('/:alumniId/events', verifyToken, async (req, res, next) => {
+    try {
+        await alumniController.getAlumniEvents(req, res);
+    } catch (error) {
+        next(error);
+    }
+});
+
 
 module.exports = router;

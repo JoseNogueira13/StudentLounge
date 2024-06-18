@@ -1,0 +1,73 @@
+openapi: 3.0.0
+info:
+  title: StudentLounge
+  version: 1.0.0
+  description: documentation to get alumni favorites
+paths:
+  /alumni/{alumniId}/favorites:
+    get:
+      tags:
+        - alumni
+      summary: Get all the posts the alumni favorited
+      parameters:
+        - in: path
+          name: alumniId
+          required: true
+          schema:
+            type: integer
+          description: ID of the alumni
+      responses:
+        '200':
+          description: A list of favorited posts
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  posts:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        postId:
+                          type: integer
+                          example: 1
+                        title:
+                          type: string
+                          example: "First Post"
+                        image:
+                          type: string
+                          example: "http://example.com/image1.jpg"
+                        body:
+                          type: string
+                          example: "This is the body of the first post."
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "You need to be logged in to get information about an alumni"
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "The alumni does not exist"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Something went wrong. Please try again later"

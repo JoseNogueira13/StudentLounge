@@ -1,0 +1,87 @@
+openapi: 3.0.0
+info:
+  title: StudentLounge
+  version: 1.0.0
+  description: documentation for alumni account addition to company
+paths:
+  /alumni/{alumniId}/companies:
+    post:
+      tags:
+        - alumni
+      summary: Add an alumni to a specific company
+      parameters:
+        - in: path
+          name: alumniId
+          required: true
+          schema:
+            type: integer
+          description: ID of the alumni
+        - in: body
+          name: body
+          required: true
+          description: Company and date information
+          schema:
+            type: object
+            properties:
+              companyId:
+                type: integer
+                example: 2
+              startDate:
+                type: string
+                format: date
+                example: 01-01-2020
+              endDate:
+                type: string
+                format: date
+                example: 01-01-2021
+      responses:
+        '200':
+          description: Alumni added to the company successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Alumni added to the company successfully"
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "The data you provided is incorrect or missing"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "You need to be logged in to add a company"
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "The company does not exist"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Something went wrong. Please try again later"
