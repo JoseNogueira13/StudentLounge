@@ -1,0 +1,58 @@
+openapi: 3.0.0
+info:
+  title: StudentLounge
+  version: 1.0.0
+  description: Documentation to get a specific event by ID
+paths:
+  /events/{eventId}:
+    get:
+      tags:
+        - events
+      summary: Get a specific event by ID
+      parameters:
+        - in: path
+          name: eventId
+          required: true
+          schema:
+            type: integer
+          description: ID of the event
+      responses:
+        '200':
+          description: Details of the specific event
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  eventId:
+                    type: integer
+                    example: 123
+                  title:
+                    type: string
+                    example: "Tech Conference 2024"
+                  date:
+                    type: string
+                    example: "2024-07-15"
+                  location:
+                    type: string
+                    example: "b204"
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "The event does not exist"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Something went wrong. Please try again later"

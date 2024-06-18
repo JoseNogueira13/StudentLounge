@@ -1,0 +1,91 @@
+openapi: 3.0.0
+info:
+  title: StudentLounge
+  version: 1.0.0
+  description: Documentation to update event information
+paths:
+  /events/{eventId}:
+    patch:
+      tags:
+        - events
+      summary: Alter information about an event
+      parameters:
+        - in: header
+          name: token
+          required: true
+          schema:
+            type: string
+          description: Authentication token
+        - in: path
+          name: eventId
+          required: true
+          schema:
+            type: integer
+          description: ID of the event to update
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  example: "Updated Tech Conference 2024"
+                date:
+                  type: string
+                  example: "07/08/24"
+                location:
+                  type: string
+                  example: "New Auditorium"
+      responses:
+        '200':
+          description: Event altered successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "The event was altered successfully"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "You need to be logged in to alter an event"
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Your account lacks the necessary permissions for this action"
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "The event does not exist"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Something went wrong. Please try again later"

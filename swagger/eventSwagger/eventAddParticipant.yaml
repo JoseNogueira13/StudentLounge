@@ -1,0 +1,88 @@
+openapi: 3.0.0
+info:
+  title: StudentLounge
+  version: 1.0.0
+  description: Documentation to add an alumni to an event
+paths:
+  /events/{eventId}/participate:
+    post:
+      tags:
+        - events
+      summary: Add an alumni to an event
+      parameters:
+        - in: path
+          name: eventId
+          required: true
+          schema:
+            type: integer
+          description: ID of the event
+        - in: body
+          name: alumniId
+          required: true
+          schema:
+            type: object
+            properties:
+              alumniId:
+                type: integer
+                description: ID of the alumni
+      responses:
+        '200':
+          description: Alumni successfully added to the event
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Alumni successfully added to the event"
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Alumni already participating in the event"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "You need to be logged in to add an alumni to an event"
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Your account lacks the necessary permissions for this action"
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "The event you are trying to participate in does not exist"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Something went wrong. Please try again later"
