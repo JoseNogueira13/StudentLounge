@@ -1,0 +1,75 @@
+openapi: 3.0.0
+info:
+  title: StudentLounge
+  version: 1.0.0
+  description: Documentation to get all projects
+paths:
+  /alumni/{alumniId}/projects:
+    get:
+      tags:
+        - alumni
+      summary: Get all projects of an alumni
+      description: Get all projects of an alumni by specifying the alumni ID
+      parameters:
+        - in: path
+          name: alumniId
+          required: true
+          description: The ID of the alumni to get projects
+          schema:
+            type: string
+            example: '5'
+      responses:
+        200:
+          description: Projects retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  projects:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        projectId:
+                          type: integer
+                          example: 1
+                        title:
+                          type: string
+                          example: "Project Alpha"
+                        description:
+                          type: string
+                          example: "A project about AI advancements."
+                        url:
+                          type: string
+                          example: "http://example.com/project-alpha"
+        401:
+          description: Unauthorized access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Unauthorized access
+        403:
+          description: Forbidden access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Forbidden: You do not have permission to access these projects
+        404:
+          description: Alumni not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Alumni not found

@@ -1,4 +1,4 @@
-const { Alumni, AlumniCompany, Company, Posts, FavoritePosts, AlumniEvents, Events} = require('../models');
+const { Alumni, AlumniCompany, Company, Posts, FavoritePosts, AlumniEvents, Events, Projects} = require('../models');
 const { formatDate } = require('../utils/date.js');
 const bcrypt = require('bcrypt');
 const { Op } = require('sequelize');
@@ -187,13 +187,13 @@ async function getAlumni(req, res) {
 }
 
 async function getAllAlumni(req, res) {
-    const { name, profession, skill, companies, page = 1, limit = 10 } = req.query;
+    const { name, profession, skills, companies, page = 1, limit = 10 } = req.query;
     const offset = (page - 1) * limit;
 
     const where = {};
     if (name) where.name = { [Op.like]: `%${name}%` };
     if (profession) where.currentProfession = { [Op.like]: `%${profession}%` };
-    if (skill) where.skills = { [Op.like]: `%${skill}%` };
+    if (skills) where.skills = { [Op.like]: `%${skills}%` };
     if (companies) where.currentProfession = { [Op.like]: `%${companies}%` };
 
     try {
@@ -378,10 +378,29 @@ async function getAlumniEvents(req, res) {
             events
         });
     } catch (error) {
-        console.error('Error getting alumni events:', error);
+        res.status(500).json({ message: 'Something went wrong. Please try again later' });
+    }
+}
+
+async function getAlumniProjects(req, res) {
+    const { alumniId } = req.params;
+
+    try {
+        const alumni = await Alumni.findByPk(alumniId);
+        if (!alumni) {
+            return res.status(404).json({ message: 'The alumni does not exist' });
+        }
+
+        const projects = await Projects.findAll({
+            where: { alumniId }
+        });
+
+        res.status(200).json({ projects });
+    } catch (error) {
+        console.error('Error getting alumni projects:', error);
         res.status(500).json({ message: 'Something went wrong. Please try again later' });
     }
 }
 
 
-module.exports = { registerAlumni, login, updateAlumni, deleteAlumni, getAlumni, getAllAlumni, getAlumniCompanies,  addAlumniToCompany, getFavoritePosts, getAlumniEvents};
+module.exports = { registerAlumni, login, updateAlumni, deleteAlumni, getAlumni, getAllAlumni, getAlumniCompanies,  addAlumniToCompany, getFavoritePosts, getAlumniEvents, getAlumniProjects};

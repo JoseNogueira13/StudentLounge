@@ -1,0 +1,77 @@
+openapi: 3.0.0
+info:
+  title: StudentLounge
+  version: 1.0.0
+  description: API to manage companies with filtering and pagination
+paths:
+  /companies/{companyId}/alumni:
+    get:
+      summary: Get all alumni of a specific company.
+      tags:
+        - companies
+      parameters:
+        - in: path
+          name: companyId
+          required: true
+          schema:
+            type: integer
+          description: ID of the company to fetch alumni for.
+        - in: header
+          name: Authorization
+          required: true
+          schema:
+            type: string
+          description: JWT token for authentication.
+      responses:
+        '200':
+          description: Successfully retrieved alumni of the company.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  company:
+                    type: string
+                    description: Name of the company.
+                  alumni:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: Name of the alumni.
+                        email:
+                          type: string
+                          format: email
+                          description: Email address of the alumni.
+        '401':
+          description: Unauthorized. Authentication token is missing or invalid.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized. Please log in.
+        '404':
+          description: Company not found. The specified company ID does not exist.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Company not found.
+        '500':
+          description: Internal server error. Something went wrong on the server side.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal server error. Please try again later.

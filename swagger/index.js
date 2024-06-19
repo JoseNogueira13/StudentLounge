@@ -31,6 +31,7 @@ const loadYAMLFiles = (dirPath) => {
 const alumniPaths = loadYAMLFiles(path.resolve(__dirname, './alumniSwagger'));
 const companyPaths = loadYAMLFiles(path.resolve(__dirname, './companySwagger'));
 const eventPaths = loadYAMLFiles(path.resolve(__dirname, './eventSwagger'));
+const projectPaths = loadYAMLFiles(path.resolve(__dirname, './projectSwagger'));
 
 const swaggerDocument = {
   openapi: '3.0.0',
@@ -42,7 +43,8 @@ const swaggerDocument = {
   paths: {
     ...alumniPaths,
     ...companyPaths,
-    ...eventPaths
+    ...eventPaths,
+    ...projectPaths
   },
   tags: [
     {

@@ -93,5 +93,13 @@ router.get('/:alumniId/events', verifyToken, async (req, res, next) => {
     }
 });
 
+router.get('/:alumniId/projects', verifyToken, async (req, res, next) => {
+    try {
+        await alumniController.getAlumniProjects(req, res);
+    } catch (error) {
+        next(error);
+    }
+});
+
 
 module.exports = router;

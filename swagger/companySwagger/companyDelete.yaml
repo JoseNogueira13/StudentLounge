@@ -1,0 +1,75 @@
+openapi: 3.0.0
+info:
+  title: StudentLounge
+  version: 1.0.0
+  description: documentation for company creation
+paths:
+  /companies/{companyId}:
+    delete:
+      summary: Delete a specific company.
+      tags:
+        - companies
+      parameters:
+        - in: path
+          name: companyId
+          required: true
+          schema:
+            type: integer
+          description: ID of the company to delete.
+        - in: header
+          name: Authorization
+          required: true
+          schema:
+            type: string
+          description: JWT token for authentication.
+      responses:
+        '200':
+          description: Successfully deleted the company.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Company deleted successfully.
+        '401':
+          description: Unauthorized. Authentication token is missing or invalid.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized. Please log in.
+        '403':
+          description: Forbidden. You do not have permission to delete this company.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden. You do not have permission to delete this company.
+        '404':
+          description: Company not found. The specified company ID does not exist.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Company not found.
+        '500':
+          description: Internal server error. Something went wrong on the server side.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal server error. Please try again later.

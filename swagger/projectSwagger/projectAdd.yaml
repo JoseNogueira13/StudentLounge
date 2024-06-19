@@ -1,0 +1,94 @@
+openapi: 3.0.0
+info:
+  title: StudentLounge
+  version: 1.0.0
+  description: Documentation to add a new project
+paths:
+  /projects/{alumniId}:
+    post:
+      tags:
+        - projects
+      summary: Add a new project
+      parameters:
+        - in: path
+          name: alumniId
+          required: true
+          schema:
+            type: integer
+          description: ID of the alumni
+        - in: header
+          name: Authorization
+          required: true
+          schema:
+            type: string
+          description: Bearer token for authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  description: Title of the project
+                  example: "Project Alpha"
+                description:
+                  type: string
+                  description: Description of the project
+                  example: "A project about AI advancements."
+                url:
+                  type: string
+                  description: URL of the project
+                  example: "http://example.com/project-alpha"
+      responses:
+        '200':
+          description: Project added successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Project added successfully"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "You need to be logged in to add a new project"
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "You are not allowed to add a project to another account"
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "The alumni does not exist"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Something went wrong. Please try again later"

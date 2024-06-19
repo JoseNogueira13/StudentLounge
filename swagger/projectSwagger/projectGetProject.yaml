@@ -1,0 +1,74 @@
+openapi: 3.0.0
+info:
+  title: StudentLounge
+  version: 1.0.0
+  description: Documentation to get a specific project
+paths:
+  /projects/{projectId}:
+    get:
+      tags:
+        - projects
+      summary: Get a specific project
+      parameters:
+        - in: path
+          name: projectId
+          required: true
+          schema:
+            type: integer
+          description: ID of the project
+        - in: header
+          name: Authorization
+          required: true
+          schema:
+            type: string
+          description: Bearer token for authentication
+      responses:
+        '200':
+          description: A specific project
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  projectId:
+                    type: integer
+                    example: 1
+                  title:
+                    type: string
+                    example: "Project A"
+                  description:
+                    type: string
+                    example: "This is the first project"
+                  url:
+                    type: string
+                    example: "https://example.com/projectA"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "You need to be logged in to view the projects of an alumni"
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "The requested project does not exist"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Something went wrong. Please try again later"

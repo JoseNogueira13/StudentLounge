@@ -1,0 +1,116 @@
+openapi: 3.0.0
+info:
+  title: StudentLounge
+  version: 1.0.0
+  description: API to manage companies with filtering and pagination
+paths:
+  /companies:
+    get:
+      tags:
+        - companies
+      summary: Get all companies with filters
+      parameters:
+        - in: query
+          name: name
+          schema:
+            type: string
+          description: Filter companies by name (case-insensitive)
+        - in: query
+          name: type
+          schema:
+            type: string
+          description: Filter companies by type (case-insensitive)
+        - in: query
+          name: location
+          schema:
+            type: string
+          description: Filter companies by location (case-insensitive)
+        - in: query
+          name: page
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+          description: Page number for pagination (default: 0)
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 10
+          description: Number of items per page (default: 10, max: 100)
+      responses:
+        '200':
+          description: A list of companies with pagination info
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  pagination:
+                    type: object
+                    properties:
+                      total:
+                        type: integer
+                        description: Total number of companies matching the filters
+                      pages:
+                        type: integer
+                        description: Total number of pages
+                      current:
+                        type: integer
+                        description: Current page number
+                      limit:
+                        type: integer
+                        description: Number of companies per page
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        companyId:
+                          type: integer
+                          description: Unique identifier for the company
+                        name:
+                          type: string
+                          description: Name of the company
+                        type:
+                          type: string
+                          description: Type of the company
+                        location:
+                          type: string
+                          description: Location of the company
+                        links:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              rel:
+                                type: string
+                                description: Link relation
+                              href:
+                                type: string
+                                description: URL of the link
+                              method:
+                                type: string
+                                description: HTTP method of the link
+        '404':
+          description: No companies were found that match the filters
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: No companies were found that match the filters
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Something went wrong. Please try again later
