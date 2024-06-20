@@ -1,0 +1,109 @@
+openapi: 3.0.0
+info:
+  title: studentLounge
+  version: 1.0.0
+paths:
+  /chats/{alumniId}:
+    get:
+      summary: documentation for getting all chats
+      tags:
+        - chats
+      parameters:
+        - in: path
+          name: alumniId
+          required: true
+          schema:
+            type: integer
+          description: ID of the alumni to retrieve chats for.
+        - in: header
+          name: token
+          required: true
+          schema:
+            type: string
+          description: Authorization token.
+      responses:
+        '200':
+          description: Successful response with chats data.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    chatId:
+                      type: integer
+                      description: ID of the chat.
+                    alumniId:
+                      type: integer
+                      description: ID of the alumni initiating the chat.
+                    recipientId:
+                      type: integer
+                      description: ID of the recipient alumni.
+                    Alumni:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: Name of the alumni associated with the chat.
+                        email:
+                          type: string
+                          description: Email of the alumni associated with the chat.
+                    Messages:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          messageBody:
+                            type: string
+                            description: Content of the message.
+                          time:
+                            type: string
+                            format: date-time
+                            description: Timestamp when the message was sent.
+              example:
+                - chatId: 1
+                  alumniId: 1
+                  recipientId: 2
+                  Alumni:
+                    name: Alumni 1
+                    email: alumni1@example.com
+                  Messages:
+                    - messageBody: "Hello, how are you?"
+                      time: "2024-06-20T13:18:03.000Z"
+                - chatId: 2
+                  alumniId: 2
+                  recipientId: 1
+                  Alumni:
+                    name: Alumni 2
+                    email: alumni2@example.com
+                  Messages:
+                    - messageBody: "I am fine, thank you"
+                      time: "2024-06-20T13:18:03.000Z"
+        '401':
+          description: Unauthorized access.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '404':
+          description: Alumni not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string

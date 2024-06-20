@@ -1,0 +1,53 @@
+openapi: 3.0.0
+info:
+  title: studentLounge
+  version: 1.0.0
+paths:
+  /chats/{chatId}/messages:
+    get:
+      summary: documentation for getting all messages
+      tags:
+        - chats
+      parameters:
+        - in: path
+          name: chatId
+          required: true
+          schema:
+            type: number
+          description: ID of the chat to retrieve messages from.
+        - in: header
+          name: token
+          required: true
+          schema:
+            type: string
+          description: Access token for authentication.
+      responses:
+        200:
+          description: Successfully retrieved messages.
+          content:
+            application/json:
+              example:
+                - messageId: 1
+                  messageBody: "Hello, how are you?"
+                  time: "2024-05-20T08:05:00Z"
+                - messageId: 2
+                  messageBody: "I'm good, thanks!"
+                  time: "2024-05-20T08:10:00Z"
+        401:
+          description: Unauthorized - User not logged in.
+          content:
+            application/json:
+              example:
+                message: "You need to be logged in to see the messages"
+        404:
+          description: No messages were found for the provided chatId.
+          content:
+            application/json:
+              example:
+                message: "No messages were found"
+        500:
+          description: Internal server error.
+          content:
+            application/json:
+              example:
+                message: "Something went wrong. Please try again later"

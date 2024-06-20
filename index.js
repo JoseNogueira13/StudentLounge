@@ -6,6 +6,7 @@ const alumniRoutes = require('./routes/alumniRoutes');
 const companyRoutes = require('./routes/companyRoutes');
 const eventRoutes = require('./routes/eventRoutes');
 const projectRoutes = require('./routes/projectRoutes');
+const chatRoutes = require('./routes/chatRoutes');
 
 const app = express();
 
@@ -17,6 +18,7 @@ app.use('/alumni', alumniRoutes);
 app.use('/companies', companyRoutes);
 app.use('/events', eventRoutes);
 app.use('/projects', projectRoutes);
+app.use('/chats', chatRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

@@ -1,0 +1,59 @@
+openapi: 3.0.0
+info:
+  title: StudentLounge
+  version: 1.0.0
+  description: Documentation for chat deletion
+paths:
+  /chats/{chatId}:
+    delete:
+      summary: Delete a specific chat.
+      tags:
+        - chats
+      parameters:
+        - in: path
+          name: chatId
+          required: true
+          schema:
+            type: integer
+          description: ID of the chat to be deleted.
+          example: 123
+        - in: header
+          name: Authorization
+          required: true
+          schema:
+            type: string
+          description: Access token for authentication (Bearer token).
+          example: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+      responses:
+        200:
+          description: Chat deleted successfully.
+          content:
+            application/json:
+              example:
+                message: "The chat was deleted successfully"
+        401:
+          description: Unauthorized - User not logged in.
+          content:
+            application/json:
+              example:
+                message: "You need to be logged in to delete the chat"
+        404:
+          description: Chat not found.
+          content:
+            application/json:
+              example:
+                message: "The chat does not exist"
+        500:
+          description: Internal server error.
+          content:
+            application/json:
+              example:
+                message: "Something went wrong. Please try again later"
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - bearerAuth: []

@@ -1,0 +1,90 @@
+openapi: 3.0.0
+info:
+  title: Alumni Chat API
+  version: 1.0.0
+paths:
+  /chats:
+    post:
+      summary: documentation for creating a chat
+      tags:
+        - chats
+      requestBody:
+        description: Alumni IDs required to create a chat.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                alumniId:
+                  type: integer
+                  example: 1
+                recipientId:
+                  type: integer
+                  example: 2
+      parameters:
+        - in: header
+          name: Authorization
+          required: true
+          schema:
+            type: string
+          description: JWT token for authentication.
+      responses:
+        '200':
+          description: The chat was created successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "The chat was created successfully"
+        '400':
+          description: Bad request. A chat already exists between the specified alumni.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "A chat already exists between you and this alumni"
+        '401':
+          description: Unauthorized. Authentication token is missing or invalid.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "You need to be logged in to create a chat"
+        '404':
+          description: Not found. One or both of the specified alumni do not exist.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "The alumni you are trying to chat with does not exist"
+        '500':
+          description: Internal server error. Something went wrong on the server side.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Something went wrong. Please try again later"
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - bearerAuth: []

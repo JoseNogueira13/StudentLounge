@@ -23,7 +23,7 @@ Alumni.hasMany(AlumniEvents, { foreignKey: 'alumniId' });
 AlumniEvents.belongsTo(Alumni, { foreignKey: 'alumniId' });
 
 // Alumni and Chats
-Alumni.hasMany(Chat, { foreignKey: 'alumniId' });
+Alumni.hasMany(Chat, { as: 'alumniChats', foreignKey: 'alumniId' });
 Chat.belongsTo(Alumni, { foreignKey: 'alumniId' });
 
 // Alumni and Projects
@@ -45,6 +45,10 @@ FavoritePosts.belongsTo(Posts, { foreignKey: 'postId' });
 //events and AlumniEvents
 Events.hasMany(AlumniEvents, { foreignKey: 'eventId' });
 AlumniEvents.belongsTo(Events, { foreignKey: 'eventId' });
+
+// alumni and messages
+Alumni.hasMany(Message, { foreignKey: 'alumniId' });
+Message.belongsTo(Alumni, { foreignKey: 'alumniId' });
 
 
 // Export models

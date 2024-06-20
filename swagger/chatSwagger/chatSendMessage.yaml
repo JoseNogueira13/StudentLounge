@@ -1,0 +1,67 @@
+openapi: 3.0.0
+info:
+  title: studentLounge
+  version: 1.0.0
+paths:
+  /chats/{chatId}/messages:
+    post:
+      summary: documentation for sending a message
+      tags:
+        - chats
+      parameters:
+        - in: path
+          name: chatId
+          required: true
+          schema:
+            type: number
+          description: ID of the chat where the message will be sent.
+        - in: header
+          name: token
+          required: true
+          schema:
+            type: string
+          description: Access token for authentication.
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              messageBody:
+                type: string
+          description: Object containing the message content.
+      responses:
+        200:
+          description: Message sent successfully.
+          content:
+            application/json:
+              example:
+                message: "Your message was sent successfully"
+                newMessage:
+                  messageId: 3
+                  messageBody: "I'm doing great, thanks!"
+                  time: "2024-05-20T08:15:00Z"
+        400:
+          description: Bad request - Empty message body.
+          content:
+            application/json:
+              example:
+                message: "Your message is empty"
+        401:
+          description: Unauthorized - User not logged in.
+          content:
+            application/json:
+              example:
+                message: "You need to be logged in to send the messages"
+        404:
+          description: Chat not found.
+          content:
+            application/json:
+              example:
+                message: "The chat does not exist"
+        500:
+          description: Internal server error.
+          content:
+            application/json:
+              example:
+                message: "Something went wrong. Please try again later"
