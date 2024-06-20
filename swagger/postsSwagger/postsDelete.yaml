@@ -1,0 +1,59 @@
+openapi: 3.0.0
+info:
+  title: studentLounge
+  version: 1.0.0
+  description: Documentation for deleting a specific post endpoint
+paths:
+  /posts/{postId}:
+    delete:
+      summary: Delete a specific post
+      tags:
+        - posts
+      parameters:
+        - in: path
+          name: postId
+          required: true
+          schema:
+            type: number
+          description: ID of the post to delete
+          example: 1
+        - in: header
+          name: Authorization
+          required: true
+          schema:
+            type: string
+          description: Access token for authentication (Bearer token)
+          example: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+      responses:
+        200:
+          description: Post deleted successfully
+          content:
+            application/json:
+              example:
+                message: "Post deleted successfully"
+        401:
+          description: Unauthorized - User not logged in
+          content:
+            application/json:
+              example:
+                message: "You need to be logged in to delete a post"
+        404:
+          description: Not found - Post does not exist
+          content:
+            application/json:
+              example:
+                message: "The post does not exist"
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                message: "Something went wrong. Please try again later"
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - bearerAuth: []

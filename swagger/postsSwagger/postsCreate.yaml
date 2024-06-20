@@ -1,0 +1,74 @@
+openapi: 3.0.0
+info:
+  title: studentLounge
+  version: 1.0.0
+  description: documentation for the posts create endpoint
+paths:
+  /posts:
+    post:
+      summary: Create a new post
+      tags:
+        - posts
+      parameters:
+        - in: header
+          name: Authorization
+          required: true
+          schema:
+            type: string
+          description: Access token for authentication (Bearer token)
+          example: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  description: Title of the post
+                  example: "My First Post"
+                image:
+                  type: string
+                  description: URL of the image
+                  example: "http://example.com/image.png"
+                postBody:
+                  type: string
+                  description: Content of the post
+                  example: "This is the body of my first post."
+              required:
+                - title
+                - postBody
+      responses:
+        200:
+          description: Post created successfully
+          content:
+            application/json:
+              example:
+                message: "Post created successfully"
+        400:
+          description: Bad request - Missing required fields
+          content:
+            application/json:
+              example:
+                message: "The body of the post and the title cannot be empty"
+        401:
+          description: Unauthorized - User not logged in
+          content:
+            application/json:
+              example:
+                message: "You need to be logged in to create a post"
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                message: "Something went wrong. Please try again later"
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - bearerAuth: []

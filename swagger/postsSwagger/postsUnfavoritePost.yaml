@@ -1,0 +1,58 @@
+openapi: 3.0.0
+info:
+  title: studentLounge
+  version: 1.0.0
+  description: Documentation for the endpoint to remove favorite from a post
+paths:
+  /posts/{postId}/favorite:
+    delete:
+      summary: Remove favorite from a post
+      tags:
+        - posts
+      parameters:
+        - in: path
+          name: postId
+          required: true
+          schema:
+            type: integer
+          description: ID of the post to remove favorite from
+        - in: header
+          name: Authorization
+          required: true
+          schema:
+            type: string
+          description: Access token for authentication (Bearer token)
+          example: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+      responses:
+        '200':
+          description: Post favorite removed successfully
+          content:
+            application/json:
+              example:
+                message: "Post favorite removed successfully"
+        '401':
+          description: Unauthorized - User not logged in
+          content:
+            application/json:
+              example:
+                message: "You need to be logged in to remove a favorite from a post"
+        '404':
+          description: Not found - The post is not favorited
+          content:
+            application/json:
+              example:
+                message: "The post is not favorited"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                message: "Something went wrong. Please try again later"
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - bearerAuth: []

@@ -1,0 +1,132 @@
+openapi: 3.0.0
+info:
+  title: studentLounge
+  version: 1.0.0
+  description: Documentation for the posts retrieval endpoint
+paths:
+  /posts:
+    get:
+      summary: Get all posts
+      tags:
+        - posts
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: number
+            default: 10
+          description: Number of posts to return per page
+          example: 10
+        - in: query
+          name: page
+          schema:
+            type: number
+            default: 1
+          description: Page number to retrieve
+          example: 1
+      responses:
+        200:
+          description: A list of posts with pagination
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  pagination:
+                    type: object
+                    properties:
+                      total:
+                        type: number
+                        description: Total number of posts
+                        example: 100
+                      pages:
+                        type: number
+                        description: Total number of pages
+                        example: 10
+                      current:
+                        type: number
+                        description: Current page number
+                        example: 1
+                      limit:
+                        type: number
+                        description: Number of posts per page
+                        example: 10
+                  posts:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        postId:
+                          type: number
+                          description: ID of the post
+                          example: 1
+                        title:
+                          type: string
+                          description: Title of the post
+                          example: "First Post"
+                        image:
+                          type: string
+                          description: URL of the image
+                          example: "http://example.com/image1.jpg"
+                        body:
+                          type: string
+                          description: Content of the post
+                          example: "This is the first post."
+                  links:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        rel:
+                          type: string
+                          description: Relation type of the link
+                          example: "next-page"
+                        href:
+                          type: string
+                          description: URL of the next page
+                          example: "/posts?limit=10&page=2"
+                        method:
+                          type: string
+                          description: HTTP method of the link
+                          example: "GET"
+              examples:
+                success:
+                  value:
+                    pagination:
+                      total: 100
+                      pages: 10
+                      current: 1
+                      limit: 10
+                    posts:
+                      - postId: 1
+                        title: "First Post"
+                        image: "http://example.com/image1.jpg"
+                        body: "This is the first post."
+                      - postId: 2
+                        title: "Second Post"
+                        image: "http://example.com/image2.jpg"
+                        body: "This is the second post."
+                    links:
+                      - rel: "next-page"
+                        href: "/posts?limit=10&page=2"
+                        method: "GET"
+        404:
+          description: No posts found
+          content:
+            application/json:
+              example:
+                message: "No posts found"
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                message: "Something went wrong. Please try again later"
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - bearerAuth: []

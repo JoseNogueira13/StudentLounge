@@ -1,0 +1,64 @@
+openapi: 3.0.0
+info:
+  title: studentLounge
+  version: 1.0.0
+  description: Documentation for the endpoint to favorite a post
+paths:
+  /posts/{postId}/favorite:
+    post:
+      summary: Favorite a post
+      tags:
+        - posts
+      parameters:
+        - in: path
+          name: postId
+          required: true
+          schema:
+            type: integer
+          description: ID of the post to favorite
+        - in: header
+          name: Authorization
+          required: true
+          schema:
+            type: string
+          description: Access token for authentication (Bearer token)
+          example: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+      responses:
+        '200':
+          description: Post favorited successfully
+          content:
+            application/json:
+              example:
+                message: "Post favorited successfully"
+        '400':
+          description: Bad request - Post is already favorited
+          content:
+            application/json:
+              example:
+                message: "Post is already favorited"
+        '401':
+          description: Unauthorized - User not logged in
+          content:
+            application/json:
+              example:
+                message: "You need to be logged in to favorite a post"
+        '404':
+          description: Not found - The post does not exist
+          content:
+            application/json:
+              example:
+                message: "The post does not exist"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                message: "Something went wrong. Please try again later"
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - bearerAuth: []

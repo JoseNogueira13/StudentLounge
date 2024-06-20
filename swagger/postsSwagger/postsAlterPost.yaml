@@ -1,0 +1,78 @@
+openapi: 3.0.0
+info:
+  title: studentLounge
+  version: 1.0.0
+  description: Documentation for updating a specific post endpoint
+paths:
+  /posts/{postId}:
+    patch:
+      summary: Update a specific post
+      tags:
+        - posts
+      parameters:
+        - in: path
+          name: postId
+          required: true
+          schema:
+            type: number
+          description: ID of the post to update
+          example: 1
+        - in: header
+          name: Authorization
+          required: true
+          schema:
+            type: string
+          description: Access token for authentication (Bearer token)
+          example: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  description: New title of the post
+                  example: "Updated Title"
+                image:
+                  type: string
+                  description: New URL of the image
+                  example: "http://example.com/updated_image.jpg"
+                postBody:
+                  type: string
+                  description: New content of the post
+                  example: "This is the updated content of the post."
+      responses:
+        200:
+          description: Post updated successfully
+          content:
+            application/json:
+              example:
+                message: "Post updated successfully"
+        401:
+          description: Unauthorized - User not logged in
+          content:
+            application/json:
+              example:
+                message: "You need to be logged in to alter a post"
+        404:
+          description: Not found - Post does not exist
+          content:
+            application/json:
+              example:
+                message: "The post does not exist"
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                message: "Something went wrong. Please try again later"
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - bearerAuth: []
