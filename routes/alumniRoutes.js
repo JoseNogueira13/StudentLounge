@@ -3,7 +3,7 @@ const router = express.Router();
 const { validationResult } = require('express-validator');
 const alumniController = require('../controllers/alumniController');
 const { registerAlumniValidator, loginAlumniValidator } = require('../validators/alumniValidators');
-const { verifyToken, checkAdmin } = require('../authenticate/auth');
+const { verifyToken } = require('../authenticate/auth');
 
 router.post('/', registerAlumniValidator, async(req, res, next) => {
     const errors = validationResult(req);

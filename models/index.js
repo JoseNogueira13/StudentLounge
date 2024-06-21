@@ -1,4 +1,4 @@
-const Alumni = require('./AlumniModel');
+const Alumni = require('./AlumniModel.js');
 const Company = require('./CompanyModel');
 const AlumniCompany = require('./AlumniCompanyModel');
 const Events = require('./EventsModel');
