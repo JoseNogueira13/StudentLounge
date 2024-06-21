@@ -1,13 +1,13 @@
-const Alumni = require('./AlumniModel.js');
-const Company = require('./CompanyModel');
-const AlumniCompany = require('./AlumniCompanyModel');
-const Events = require('./EventsModel');
-const AlumniEvents = require('./AlumniEventsModel');
-const Projects = require('./ProjectsModel');
-const Chat = require('./ChatModel');
-const Message = require('./MessageModel');
-const Posts = require('./PostsModel');
-const FavoritePosts = require('./FavoritePostsModel');
+const Alumni = require('./alumniModel.js');
+const Company = require('./companyModel');
+const AlumniCompany = require('./alumniCompanyModel');
+const Events = require('./eventsModel');
+const AlumniEvents = require('./alumniEventsModel');
+const Projects = require('./projectsModel');
+const Chat = require('./chatModel');
+const Message = require('./messageModel');
+const Posts = require('./postsModel');
+const FavoritePosts = require('./favoritePostsModel');
 
 // Alumni and AlumniCompany
 Alumni.hasMany(AlumniCompany, { foreignKey: 'alumniId' });
