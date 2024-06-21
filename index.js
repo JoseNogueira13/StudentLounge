@@ -1,3 +1,7 @@
+require('dotenv').config();
+
+console.log('Loaded environment variables:', process.env.SECRET_KEY);
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const swaggerUi = require('swagger-ui-express');

@@ -3,7 +3,7 @@ const { formatDate } = require('../utils/date.js');
 const bcrypt = require('bcrypt');
 const { Op } = require('sequelize');
 const jwt = require('jsonwebtoken');
-const secret = require('../config').secretKey;
+const secret = process.env.SECRET_KEY;
 
 async function registerAlumni(req, res) {
     const { username, password, studentNumber, email, name, currentProfession, skills } = req.body;
@@ -82,6 +82,7 @@ async function login(req, res) {
         res.status(200).json({token: token, message: 'login was successful' });
 
     } catch (error) {
+        console.log(secret);
         res.status(500).json({ error: 'Something went wrong. Please try again later' });
     }
 }
