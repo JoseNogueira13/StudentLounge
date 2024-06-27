@@ -53,7 +53,7 @@ router.get('/:alumniId', verifyToken, async (req, res, next) => {
     }
 });
 
-router.get('/', verifyToken, async (req, res, next) => {
+router.get('/', async (req, res, next) => {
     try {
         await alumniController.getAllAlumni(req, res);
     } catch (error) {

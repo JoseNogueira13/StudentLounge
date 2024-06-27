@@ -178,7 +178,7 @@ async function getAlumni(req, res) {
         res.status(200).json({
             email: alumni.email,
             name: alumni.name,
-            currentCompany: alumni.currentProfession,
+            currentProfession: alumni.currentProfession,
             skills: alumni.skills.split(',').map(skill => skill.trim())
         });
 
@@ -195,7 +195,6 @@ async function getAllAlumni(req, res) {
     if (name) where.name = { [Op.like]: `%${name}%` };
     if (profession) where.currentProfession = { [Op.like]: `%${profession}%` };
     if (skills) where.skills = { [Op.like]: `%${skills}%` };
-    if (companies) where.currentProfession = { [Op.like]: `%${companies}%` };
 
     try {
         const { count, rows } = await Alumni.findAndCountAll({
@@ -209,7 +208,6 @@ async function getAllAlumni(req, res) {
             name: alumnus.name,
             profession: alumnus.currentProfession,
             skills: alumnus.skills.split(',').map(skill => skill.trim()),
-            companies: alumnus.currentProfession.split(',').map(company => company.trim()),
             links: [
                 { rel: 'self', href: `/alumni/${alumnus.alumniId}`, method: 'GET' }
             ]
@@ -286,7 +284,7 @@ async function addAlumniToCompany(req, res) {
             return res.status(404).json({ message: 'The company does not exist' });
         }
 
-        if (!startDate || !endDate) {
+        if (!startDate) {
             return res.status(400).json({ message: 'The data you provIded is incorrect or missing' });            
         }
 
@@ -305,7 +303,7 @@ async function addAlumniToCompany(req, res) {
             alumniId,
             companyId,
             startDate: formatDate(startDate),
-            endDate: formatDate(endDate)
+            endDate: formatDate(endDate) || null
         });
 
         // Update experience points and level
