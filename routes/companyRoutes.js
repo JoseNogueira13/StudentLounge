@@ -12,7 +12,7 @@ router.post('/', verifyToken, async (req, res, next) => {
     }
 });
 
-router.get('/', verifyToken, async (req, res, next) => {
+router.get('/', async (req, res, next) => {
     try {
         await companyController.getAllCompanies(req, res);
     } catch (error) {
@@ -28,7 +28,7 @@ router.patch('/:companyId', verifyToken, async (req, res, next) => {
     }
 });
 
-router.get('/:companyId', verifyToken, async (req, res, next) => {
+router.get('/:companyId', async (req, res, next) => {
     try {
         await companyController.getCompany(req, res);
     } catch (error) {
@@ -36,7 +36,7 @@ router.get('/:companyId', verifyToken, async (req, res, next) => {
     }
 });
 
-router.get('/:companyId/alumni', verifyToken, async (req, res, next) => {
+router.get('/:companyId/alumni', async (req, res, next) => {
     try {
         await companyController.getCompanyAlumni(req, res);
     } catch (error) {

@@ -5,14 +5,14 @@ const verifyToken = (req, res, next) => {
   const token = req.header('Authorization');
   
   if (!token) {
-    return res.status(401).json({ message: 'Unauthorized: Token not provided' });
+    return res.status(401).json({ message: 'Unauthorized: Token not provided', token});
   }
 
   // Extract the token from the "Bearer" prefix
   const tokenWithoutBearer = token.replace('Bearer ', '');
 
   try {
-    const decoded = jwt.verify(tokenWithoutBearer, secret.secretKey);
+    const decoded = jwt.verify(tokenWithoutBearer, secret);
     req.user = decoded; // Store the decoded user data in the request object
     next();
   } catch (error) {
